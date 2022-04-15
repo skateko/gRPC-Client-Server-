@@ -1,4 +1,0 @@
-6,1,Behawiorysta3,40,100
-7,1,Behawiorysta4,40,100
-8,1,Behawiorysta5,40,100
-9,1,Behawiorysta6,40,100
