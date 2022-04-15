@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package pl.edu.pwr.rsi.grpc.interface;
+
+option java_multiple_files = true;
+option java_package = "pl.edu.pwr.rsi.grpc.interfaces.lib";
+option java_outer_classname = "HelloWorldProto";
+
+// The greeting service definition.
+service MyService {
+    // Sends a greeting
+    rpc SayHello (HelloRequest) returns (HelloReply) {
+    }
+
+    // unary - synchronous
+    // client will send one request and server will respond with one response
+    rpc getAuthor(Author) returns (Author){}
+
+    rpc saveAuthor(Author) returns (HelloReply) {}
+
+    // server-streaming - asynchronous
+    // client will send one request and server will respond with stream of messages to the client.
+    rpc getBooksByAuthor(Author) returns (stream Book) {}
+
+    // client-streaming - asynchronous
+    // client will send stream of messages and server will respnd with one response.
+    rpc saveMultipleBooks(stream Book) returns (HelloReply) {}
+
+    // bi-directional streaming - asynchronous
+    // client will send stream of messages and server will respond back with stream of messages
+    // rpc getBookByAuthorGender(stream Book) returns (stream Book) {}
+}
+
+// The request message containing the user's name.
+message HelloRequest {
+    string name = 1;
+}
+
+// The response message containing the greetings
+message HelloReply {
+    string message = 1;
+}
+
+message Book {
+    int32 book_id = 1;
+    string title = 2;
+    float price = 3;
+    int32 pages = 4;
+    int32 author_id = 5;
+}
+
+message Author {
+    int32 author_id = 1;
+    string first_name = 2;
+    string last_name = 3;
+    string gender = 4;
+    int32 book_id = 5;
+}
+
+// FILE SERVICE ************************************************************************
+
+service FileService{
+    rpc downloadFile(DownloadRequest) returns (stream DownloadResponse);
+    rpc saveFile(stream SaveRequest) returns (SaveResponse);
+}
+
+//FILE
+message File{
+    string name = 1;
+    bytes content = 2;
+}
+
+//SAVE
+message SaveRequest{
+    File file = 1;
+    FileStatus  fileStatus = 2;
+    string message = 3;
+}
+
+message SaveResponse{
+    string message = 1;
+    Status status = 2;
+}
+
+//DOWNLOAD
+message DownloadRequest{
+    string fileName = 1;
+    FileStatus fileStatus = 2;
+}
+
+message DownloadResponse{
+    File file = 1;
+    string message = 2;
+}
+
+enum FileStatus{
+    PARTIAL = 0;
+    COMPLETED = 1;
+}
+
+enum Status {
+    PENDING = 0;
+    IN_PROGRESS = 1;
+    SUCCESS = 2;
+    FAILED = 3;
+}
